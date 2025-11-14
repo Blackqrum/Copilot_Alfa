@@ -1,6 +1,7 @@
 package database
 
 import (
+	"alfa-backend/modules"
 	"database/sql"
 	"fmt"
 	"log"
@@ -8,7 +9,6 @@ import (
 	"strings"
 
 	"github.com/joho/godotenv"
-
 	_ "github.com/lib/pq"
 )
 
@@ -17,7 +17,6 @@ var (
 	dbPort     string
 	dbUser     string
 	dbPassword string
-	dbName     string
 )
 
 func init() {
@@ -34,7 +33,6 @@ func loadConfig() {
 	dbPort = getEnv("DB_PORT", "5432")
 	dbUser = getEnv("DB_USER", "postgres")
 	dbPassword = os.Getenv("DB_PASSWORD")
-	dbName = getEnv("DB_NAME", "postgres")
 }
 
 func getEnv(key, defaultValue string) string {
@@ -45,7 +43,7 @@ func getEnv(key, defaultValue string) string {
 	return value
 }
 
-func Connect() (*sql.DB, error) {
+func Connect(dbName string) (*sql.DB, error) {
 
 	connstr := fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s sslmode=disable",
 		dbHost, dbPort, dbUser, dbPassword, dbName)
@@ -66,30 +64,12 @@ func Connect() (*sql.DB, error) {
 func CreateDatabase(db *sql.DB) error {
 	_, err := db.Exec("CREATE DATABASE myapp")
 	if err != nil {
+		log.Println("CreateDatabase error:", err)
 		if !strings.Contains(err.Error(), "already exists") {
 			return err
 		}
 	}
 	return nil
-}
-
-func ConnectToDb() (*sql.DB, error) {
-	connstr := fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=myapp sslmode=disable",
-		dbHost, dbPort, dbUser, dbPassword)
-
-	db, err := sql.Open("postgres", connstr)
-	if err != nil {
-		log.Fatal("Error while connecting to myapp")
-		return nil, err
-	}
-
-	err = db.Ping()
-	if err != nil {
-		return nil, err
-	}
-
-	return db, err
-
 }
 
 func CreateTables(db *sql.DB) error {
@@ -102,4 +82,26 @@ func CreateTables(db *sql.DB) error {
 		)`)
 
 	return err
+}
+
+func AddUserToDB(db *sql.DB, email, password, name string) error {
+	query := `INSERT INTO users (email, password, name) VALUES ($1, $2, $3)`
+	_, err := db.Exec(query, email, password, name)
+
+	return err
+}
+
+func GetEmailFromDb(db *sql.DB, email string) (*modules.User, error) {
+	var user modules.User
+	query := `SELECT id, email, password, name, created_at FROM users WHERE email = $1`
+	err := db.QueryRow(query, email).Scan(&user.ID, &user.Email, &user.Password, &user.Name, &user.Created_at)
+
+	if err != nil {
+		if err == sql.ErrNoRows {
+			return nil, fmt.Errorf("user not found")
+		}
+		return nil, fmt.Errorf("database error %v", err)
+	}
+
+	return &user, nil
 }
