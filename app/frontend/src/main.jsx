@@ -2,7 +2,7 @@ import React from 'react'
 import ReactDOM from 'react-dom/client'
 import App from './App.jsx'
 
-console.log('🚀 React app starting...')
+console.log('React app starting')
 
 try {
   const root = ReactDOM.createRoot(document.getElementById('root'));
@@ -11,7 +11,7 @@ try {
       <App />
     </React.StrictMode>
   );
-  console.log('✅ App rendered successfully');
+  console.log('App rendered successfully');
 } catch (error) {
-  console.error('❌ Error rendering app:', error);
+  console.error('Error rendering app ', error);
 }
