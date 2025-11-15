@@ -45,8 +45,6 @@ func main() {
 		log.Fatal("Failed to create")
 	}
 
-	fmt.Println("✅ Server ready!") // ← ЭТО ДОЛЖНО ВЫВЕСТИСЯ
-
 	r.POST("/register", handlers.RegisterHandler(Appdb))
 	r.POST("/login", handlers.LoginHandler(Appdb))
 

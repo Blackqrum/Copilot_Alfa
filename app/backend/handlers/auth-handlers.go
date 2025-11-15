@@ -6,6 +6,7 @@ import (
 	"alfa-backend/modules"
 	"database/sql"
 	"fmt"
+	"log"
 	"strings"
 
 	"github.com/gin-gonic/gin"
@@ -19,18 +20,18 @@ func LoginHandler(db *sql.DB) gin.HandlerFunc {
 			return
 		}
 
-		fmt.Println("Login attempt for email:", req.Email) // ← ДОБАВЬ ЛОГ
+		fmt.Println("Login attempt for email:", req.Email)
 
 		user, err := database.GetEmailFromDb(db, req.Email)
-		fmt.Println("GetEmailFromDb result - user:", user, "error:", err) // ← ДОБАВЬ ЛОГ
+		fmt.Println("GetEmailFromDb result - user:", user, "error:", err)
 
 		if err != nil {
-			fmt.Println("User not found or DB error") // ← ДОБАВЬ ЛОГ
+			fmt.Println("User not found or DB error")
 			c.JSON(401, gin.H{"error": "Invalid credentials"})
 			return
 		}
 
-		fmt.Println("Checking password...") // ← ДОБАВЬ ЛОГ
+		fmt.Println("Checking password...")
 		if !auth.CheckPasswordHash(req.Password, user.Password) {
 			c.JSON(401, gin.H{"error": "Invalid credentials"})
 			return
@@ -56,7 +57,8 @@ func RegisterHandler(db *sql.DB) gin.HandlerFunc {
 
 		err = database.AddUserToDB(db, req.Email, hashed_password, req.Name)
 		if err != nil {
-			if strings.Contains(err.Error(), "unique constraint") {
+			log.Println("AddUserToDB error:", err)
+			if strings.Contains(err.Error(), "unique constraint") || strings.Contains(err.Error(), "повторяющееся значение ключа") {
 				c.JSON(400, "user already exists")
 				return
 			}
