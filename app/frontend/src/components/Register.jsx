@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import '../styles/Auth.css';
 
-const Register = ({ onToggleForm }) => {
+const Register = ({ onToggleForm, onRegisterSuccess }) => {
   const [formData, setFormData] = useState({
     name: '',
-    login: '',
+    email: '',
     password: ''
   });
 
@@ -15,9 +15,29 @@ const Register = ({ onToggleForm }) => {
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log('Register data:', formData);
+    
+    try {
+      const response = await fetch('/api/register', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData)
+      });
+
+      const data = await response.json();
+      
+      if (response.ok) {
+        alert('Регистрация успешна!');
+        onRegisterSuccess();
+      } else {
+        alert(data.error || 'Ошибка регистрации');
+      }
+    } catch (error) {
+      alert('Ошибка подключения к серверу');
+    }
   };
 
   return (
@@ -43,14 +63,15 @@ const Register = ({ onToggleForm }) => {
             </div>
             
             <div className="input-group">
-              <label className="input-label">Логин</label>
+              <label className="input-label">Email</label>
               <input
-                type="text"
-                name="login"
-                value={formData.login}
+                type="email"
+                name="email"
+                value={formData.email}
                 onChange={handleChange}
                 required
                 className="auth-input"
+                placeholder="example@mail.com"
               />
             </div>
             

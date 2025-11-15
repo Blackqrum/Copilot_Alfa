@@ -11,7 +11,6 @@ body {
   color: #333;
 }
 
-/* Красная шапка */
 .auth-header {
   background: linear-gradient(135deg, #d32f2f 0%, #b71c1c 100%);
   padding: 30px 20px;
@@ -37,7 +36,6 @@ body {
   font-family: "Montagu Slab", serif;
 }
 
-/* Основной контент */
 .auth-container {
   display: flex;
   flex-direction: column;
@@ -98,7 +96,7 @@ body {
 
 .auth-input:focus {
   outline: none;
-  border-color: #d32f2f;
+  border-color: #EF3124;
   background: white;
   box-shadow: 0 0 0 3px rgba(211, 47, 47, 0.1);
 }
@@ -144,7 +142,6 @@ body {
   color: #b71c1c;
 }
 
-/* Анимации */
 @keyframes fadeInUp {
   from {
     opacity: 0;
@@ -160,7 +157,6 @@ body {
   animation: fadeInUp 0.6s ease-out;
 }
 
-/* Адаптивность */
 @media (max-width: 480px) {
   .auth-header {
     padding: 25px 15px;

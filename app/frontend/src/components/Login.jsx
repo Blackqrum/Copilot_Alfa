@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import '../styles/Auth.css';
 
-const Login = ({ onToggleForm }) => {
+const Login = ({ onToggleForm, onLoginSuccess }) => {
   const [formData, setFormData] = useState({
-    login: '',
+    email: '',
     password: ''
   });
 
@@ -14,9 +14,29 @@ const Login = ({ onToggleForm }) => {
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log('Login data:', formData);
+    
+    try {
+      const response = await fetch('/api/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData)
+      });
+
+      const data = await response.json();
+      
+      if (response.ok) {
+        alert('Вход успешен!');
+        onLoginSuccess();
+      } else {
+        alert(data.error || 'Ошибка входа');
+      }
+    } catch (error) {
+      alert('Ошибка подключения к серверу');
+    }
   };
 
   return (
@@ -30,14 +50,15 @@ const Login = ({ onToggleForm }) => {
           <h2 className="auth-title">Войдите в аккаунт</h2>
           <form onSubmit={handleSubmit} className="auth-form">
             <div className="input-group">
-              <label className="input-label">Логин</label>
+              <label className="input-label">Email</label>
               <input
-                type="text"
-                name="login"
-                value={formData.login}
+                type="email"
+                name="email"
+                value={formData.email}
                 onChange={handleChange}
                 required
                 className="auth-input"
+                placeholder="example@mail.com"
               />
             </div>
             
