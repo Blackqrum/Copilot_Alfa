@@ -1,7 +1,9 @@
 import React, { useState, useRef, useEffect } from 'react';
 import '../styles/Chat.css';
+import HistoryPanel from "./HistoryPanel";
 
 const Chat = ({ onBackToAuth }) => {
+    const [isHistoryOpen, setIsHistoryOpen] = useState(false);
     const [messages, setMessages] = useState([]);
     const [inputMessage, setInputMessage] = useState('');
     const [isLoading, setIsLoading] = useState(false);
@@ -24,7 +26,6 @@ const Chat = ({ onBackToAuth }) => {
         setInputMessage('');
         setIsLoading(true);
 
-        // Имитация ответа от LLM
         setTimeout(() => {
             const botMessage = {
                 text: `Это ответ на: "${inputMessage}". Я ваш AI-ассистент!`,
@@ -37,7 +38,17 @@ const Chat = ({ onBackToAuth }) => {
 
     return (
         <div className="chat-container">
+
+            {/* Панель истории */}
+            <HistoryPanel 
+                isOpen={isHistoryOpen} 
+                onClose={() => setIsHistoryOpen(false)} 
+            />
+
             <div className="chat-header">
+                <button className="history-btn" onClick={() => setIsHistoryOpen(true)}>
+                    ☰ История
+                </button>
                 <h2>Альфа-Бизнес Ассистент</h2>
             </div>
 
@@ -47,15 +58,15 @@ const Chat = ({ onBackToAuth }) => {
                         {message.text}
                     </div>
                 ))}
+
                 {isLoading && (
                     <div className="message bot loading">
                         <div className="typing-indicator">
-                            <span></span>
-                            <span></span>
-                            <span></span>
+                            <span></span><span></span><span></span>
                         </div>
                     </div>
                 )}
+
                 <div ref={messagesEndRef} />
             </div>
 
