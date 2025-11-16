@@ -143,3 +143,10 @@
 .send-button:hover:not(:disabled) {
     background: #b71c1c;
 }
+
+.history-btn {
+    font-family: 'Regular', serif;
+    border: none;
+    background: none;
+    color: #FFFFFF;
+}

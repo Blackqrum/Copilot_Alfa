@@ -45,8 +45,8 @@ func main() {
 		log.Fatal("Failed to create")
 	}
 
-	r.POST("/register", handlers.RegisterHandler(Appdb))
 	r.POST("/login", handlers.LoginHandler(Appdb))
+	r.POST("/register", handlers.RegisterHandler(Appdb))
 
 	r.Run(":8080")
 }
