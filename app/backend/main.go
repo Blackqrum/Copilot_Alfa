@@ -48,12 +48,7 @@ func main() {
 	}
 
 	r.POST("/register", handlers.RegisterHandler(Appdb))
-	r.POST("/login", handlers.LoginHandler(Appdb))
 	r.POST("/api/assistant", handlers.BusinessAssistantHandler)
-
-	r.GET("/api/health", func(c *gin.Context) {
-		c.JSON(200, gin.H{"status": "ok"})
-	})
 
 	r.Run(":8080")
 }
