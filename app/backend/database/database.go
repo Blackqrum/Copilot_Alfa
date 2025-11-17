@@ -30,7 +30,7 @@ func loadConfig() {
 	}
 
 	dbHost = getEnv("DB_HOST", "localhost")
-	dbPort = getEnv("DB_PORT", "5432")
+	dbPort = getEnv("DB_PORT", "5433")
 	dbUser = getEnv("DB_USER", "postgres")
 	dbPassword = os.Getenv("DB_PASSWORD")
 }

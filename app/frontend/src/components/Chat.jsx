@@ -26,28 +26,55 @@ const Chat = ({ onBackToAuth }) => {
         setInputMessage('');
         setIsLoading(true);
 
-        setTimeout(() => {
-            const botMessage = {
-                text: `Это ответ на: "${inputMessage}". Я ваш AI-ассистент!`,
+        try {
+            const response = await fetch('http://localhost:8080/api/assistant', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    question: inputMessage,
+                    category: 'general'
+                })
+            });
+
+            const data = await response.json();
+
+            if (data.success) {
+                const botMessage = {
+                    text: data.answer,
+                    sender: 'bot'
+                };
+                setMessages(prev => [...prev, botMessage]);
+            } else {
+                const errorMessage = {
+                    text: `Ошибка: ${data.error || 'Неизвестная ошибка'}`,
+                    sender: 'bot'
+                };
+                setMessages(prev => [...prev, errorMessage]);
+            }
+        } catch (error) {
+            const errorMessage = {
+                text: `Ошибка соединения: ${error.message}`,
                 sender: 'bot'
             };
-            setMessages(prev => [...prev, botMessage]);
+            setMessages(prev => [...prev, errorMessage]);
+        } finally {
             setIsLoading(false);
-        }, 1000);
+        }
     };
 
     return (
         <div className="chat-container">
-
             {/* Панель истории */}
-            <HistoryPanel 
-                isOpen={isHistoryOpen} 
-                onClose={() => setIsHistoryOpen(false)} 
+            <HistoryPanel
+                isOpen={isHistoryOpen}
+                onClose={() => setIsHistoryOpen(false)}
             />
 
             <div className="chat-header">
                 <button className="history-btn" onClick={() => setIsHistoryOpen(true)}>
-                    ☰ История
+                    ☰
                 </button>
                 <h2>Альфа-Бизнес Ассистент</h2>
             </div>
@@ -58,15 +85,15 @@ const Chat = ({ onBackToAuth }) => {
                         {message.text}
                     </div>
                 ))}
-
                 {isLoading && (
                     <div className="message bot loading">
                         <div className="typing-indicator">
-                            <span></span><span></span><span></span>
+                            <span></span>
+                            <span></span>
+                            <span></span>
                         </div>
                     </div>
                 )}
-
                 <div ref={messagesEndRef} />
             </div>
 
