@@ -4,9 +4,8 @@ frontend/.env
 frontend/.env.*
 frontend/*.log
 
-# Backend
-app/backend/.env
-app/backend/go.sum
+.env
+go.sum
 
 .DS_Store
 Thumbs.db
@@ -23,3 +22,6 @@ yarn-error.log*
 
 */build/
 dist/
+
+.dockerignore
+Dockerfile.backend

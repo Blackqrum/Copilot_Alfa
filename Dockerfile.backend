@@ -1,0 +1,16 @@
+FROM golang:1.24.0-alpine
+
+WORKDIR /app
+
+# Копируем ВСЕ файлы проекта
+COPY . .
+
+# Покажем что скопировалось
+RUN ls -la
+
+# Собираем приложение
+RUN go build -o main .
+
+EXPOSE 8080
+
+CMD ["./main"]

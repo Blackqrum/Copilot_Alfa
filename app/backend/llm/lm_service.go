@@ -30,7 +30,7 @@ type BusinessAssistant struct {
 func NewBusinessAssistant() *BusinessAssistant {
 	return &BusinessAssistant{
 		ModelName: "qwen2.5:7b",
-		BaseURL:   "http://localhost:11434",
+		BaseURL:   "http://ollama:11434",
 		Client: &http.Client{
 			Timeout: 120 * time.Second,
 		},

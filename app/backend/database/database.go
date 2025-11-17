@@ -7,6 +7,7 @@ import (
 	"log"
 	"os"
 	"strings"
+	"time"
 
 	"github.com/joho/godotenv"
 	_ "github.com/lib/pq"
@@ -30,7 +31,7 @@ func loadConfig() {
 	}
 
 	dbHost = getEnv("DB_HOST", "localhost")
-	dbPort = getEnv("DB_PORT", "5433")
+	dbPort = getEnv("DB_PORT", "5432")
 	dbUser = getEnv("DB_USER", "postgres")
 	dbPassword = os.Getenv("DB_PASSWORD")
 }
@@ -44,7 +45,6 @@ func getEnv(key, defaultValue string) string {
 }
 
 func Connect(dbName string) (*sql.DB, error) {
-
 	connstr := fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s sslmode=disable",
 		dbHost, dbPort, dbUser, dbPassword, dbName)
 
@@ -53,22 +53,41 @@ func Connect(dbName string) (*sql.DB, error) {
 		return nil, err
 	}
 
-	err = db.Ping()
-	if err != nil {
-		return nil, err
+	// Добавьте эти настройки
+	db.SetMaxOpenConns(25)
+	db.SetMaxIdleConns(25)
+	db.SetConnMaxLifetime(5 * time.Minute)
+
+	// Повторные попытки подключения
+	var pingErr error
+	for i := 0; i < 10; i++ {
+		pingErr = db.Ping()
+		if pingErr == nil {
+			break
+		}
+		log.Printf("Attempt %d: Database not ready, retrying...", i+1)
+		time.Sleep(2 * time.Second)
 	}
 
-	return db, err
+	if pingErr != nil {
+		return nil, fmt.Errorf("failed to connect after retries: %v", pingErr)
+	}
+
+	log.Println("Successfully connected to database")
+	return db, nil
 }
 
 func CreateDatabase(db *sql.DB) error {
 	_, err := db.Exec("CREATE DATABASE myapp")
 	if err != nil {
-		log.Println("CreateDatabase error:", err)
-		if !strings.Contains(err.Error(), "already exists") {
-			return err
+		if strings.Contains(err.Error(), "already exists") {
+			log.Println("Database already exists, continuing...")
+			return nil
 		}
+		log.Println("CreateDatabase error:", err)
+		return err
 	}
+	log.Println("Database created successfully")
 	return nil
 }
 
