@@ -12,7 +12,7 @@ body {
 }
 
 .auth-header {
-  background: linear-gradient(135deg, #EF3124 0%, #EF3124 100%);
+  background: linear-gradient(135deg, #d32f2f 0%, #b71c1c 100%);
   padding: 30px 20px;
   text-align: center;
   color: white;
@@ -102,7 +102,7 @@ body {
 }
 
 .auth-button {
-  background: linear-gradient(135deg, #EF3124 0%, #EF3124 100%);
+  background: linear-gradient(135deg, #d32f2f 0%, #b71c1c 100%);
   color: white;
   border: none;
   padding: 15px 20px;
@@ -131,7 +131,7 @@ body {
 }
 
 .switch-link {
-  color: #EF3124;
+  color: #d32f2f;
   cursor: pointer;
   font-weight: 600;
   text-decoration: underline;
@@ -139,7 +139,7 @@ body {
 }
 
 .switch-link:hover {
-  color: #EF3124;
+  color: #b71c1c;
 }
 
 @keyframes fadeInUp {

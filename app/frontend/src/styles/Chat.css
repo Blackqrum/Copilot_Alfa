@@ -6,12 +6,12 @@
 }
 
 .chat-header {
-    background: #EF3124; 
+    background: #EF3124;
     color: white;
-    padding: 20px; 
+    padding: 20px;
     display: flex;
     align-items: center;
-    justify-content: center; 
+    justify-content: center;
     box-shadow: 0 2px 10px rgba(0,0,0,0.1);
     text-align: center;
     font-family: 'Montagu Slab', serif;
@@ -22,7 +22,7 @@
     font-size: 22px;
     font-weight: 600;
     text-align: center;
-    width: 100%; 
+    width: 100%;
 }
 
 .back-button {
@@ -149,4 +149,5 @@
     border: none;
     background: none;
     color: #FFFFFF;
+    font-size: 35px;
 }
