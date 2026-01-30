@@ -53,12 +53,10 @@ func Connect(dbName string) (*sql.DB, error) {
 		return nil, err
 	}
 
-	// Добавьте эти настройки
 	db.SetMaxOpenConns(25)
 	db.SetMaxIdleConns(25)
 	db.SetConnMaxLifetime(5 * time.Minute)
 
-	// Повторные попытки подключения
 	var pingErr error
 	for i := 0; i < 10; i++ {
 		pingErr = db.Ping()
