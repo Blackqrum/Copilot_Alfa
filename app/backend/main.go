@@ -48,7 +48,7 @@ func main() {
     }
 
     r.POST("/register", handlers.RegisterHandler(Appdb))
-    r.POST("/login", handlers.LoginHandler(Appdb))  // ← ДОБАВИЛИ ЭТУ СТРОКУ
+    r.POST("/login", handlers.LoginHandler(Appdb)) 
     r.POST("/api/assistant", handlers.BusinessAssistantHandler)
 
     r.Run(":8080")
